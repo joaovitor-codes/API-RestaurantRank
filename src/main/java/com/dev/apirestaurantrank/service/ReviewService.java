@@ -3,7 +3,6 @@ package com.dev.apirestaurantrank.service;
 import com.dev.apirestaurantrank.dto.ReviewRequest;
 import com.dev.apirestaurantrank.dto.ReviewResponse;
 import com.dev.apirestaurantrank.dto.ReviewUpdate;
-import com.dev.apirestaurantrank.exception.IllegalArgumentException;
 import com.dev.apirestaurantrank.exception.ResourceNotFoundException;
 import com.dev.apirestaurantrank.model.RestaurantEntity;
 import com.dev.apirestaurantrank.model.ReviewEntity;
@@ -76,7 +75,7 @@ public class ReviewService {
 
     public Page<ReviewResponse> getReviews(int page) {
         Pageable pageable = PageRequest.of(page, 10);
-        Page<ReviewEntity> reviewPage = reviewRepository.findAll(pageable);
+        Page<ReviewEntity> reviewPage = reviewRepository.findAllByOrderByRestaurantId_TagAsc(pageable);
         return mapToReviewResponsePage(reviewPage, pageable);
     }
 
@@ -100,7 +99,7 @@ public class ReviewService {
             return new PageImpl<>(Collections.emptyList(), pageable, 0);
         }
 
-        Page<ReviewEntity> reviewPage = reviewRepository.findByRestaurantId_Id(restaurantId, pageable);
+        Page<ReviewEntity> reviewPage = reviewRepository.findByRestaurantId_IdOrderByRestaurantId_TagAsc(restaurantId, pageable);
         return mapToReviewResponsePage(reviewPage, pageable);
     }
 
@@ -110,7 +109,7 @@ public class ReviewService {
             return new PageImpl<>(Collections.emptyList(), pageable, 0);
         }
 
-        Page<ReviewEntity> reviewPage = reviewRepository.findByUserId_Id(userId, pageable);
+        Page<ReviewEntity> reviewPage = reviewRepository.findByUserId_IdOrderByRestaurantId_TagAsc(userId, pageable);
         return mapToReviewResponsePage(reviewPage, pageable);
     }
 

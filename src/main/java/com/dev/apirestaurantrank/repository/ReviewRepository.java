@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ReviewRepository extends JpaRepository<ReviewEntity, Long> {
     Page<ReviewEntity> findAll(Pageable pageable);
-    Page<ReviewEntity> findByRestaurantId_Id(Long restaurantId, Pageable pageable);
-    Page<ReviewEntity> findByUserId_Id(Long userId, Pageable pageable);
+    Page<ReviewEntity> findAllByOrderByRestaurantId_TagAsc(Pageable pageable);
+    Page<ReviewEntity> findByRestaurantId_IdOrderByRestaurantId_TagAsc(Long restaurantId, Pageable pageable);
+    Page<ReviewEntity> findByUserId_IdOrderByRestaurantId_TagAsc(Long userId, Pageable pageable);
 }
