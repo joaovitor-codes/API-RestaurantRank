@@ -60,3 +60,7 @@ GET /users/{id}: Busca um usuário pelo ID.
 POST /users: Cria um novo usuário.
 PUT /users/{id}: Atualiza um usuário existente (requer o objeto completo).
 DELETE /users/{id}: Deleta um usuário.
+
+
+NOTA PESSOAL:
+Primeira vez que uso mais de um padrão de Design e também utilizo o Observer, bom aprendizado.
