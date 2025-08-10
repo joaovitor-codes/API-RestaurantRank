@@ -4,27 +4,41 @@ Esta é uma API RESTful desenvolvida com Spring Boot, projetada para gerenciar u
 
 Funcionalidades Principais:
 Gerenciamento de Usuários: Endpoints completos para criar, ler, atualizar e deletar (CRUD) usuários.
+
 Gerenciamento de Restaurantes: Endpoints para gerenciar restaurantes, incluindo a listagem por paginação.
+
 Reviews e Avaliações: Funcionalidade para usuários darem notas e escreverem reviews para restaurantes.
+
 Padrão Observer: Um sistema para notificar entidades (como talvez a média de um restaurante) quando novas reviews são adicionadas.
+
 Paginação: Listagem de recursos com suporte a paginação para otimizar o desempenho.
+
 Validação de Dados: Uso de anotações como @Valid, @NotBlank e @Email para garantir a integridade dos dados.
 
 Tecnologias Utilizadas:
+
 Linguagem: Java 17
+
 Framework: Spring Boot 3.x
+
 Persistência: Spring Data JPA
+
 Banco de Dados: H2 (para ambiente de desenvolvimento) e PostgreSQL (recomendado para produção)
+
 Build Tool: Maven
+
 Documentação: Springdoc-OpenAPI (Swagger UI)
+
 Outros: Lombok para reduzir código boilerplate
 
 Como Rodar o Projeto:
 Siga estes passos para configurar e rodar a aplicação em sua máquina local.
 
-Pré-requisitos
+Pré-requisitos:
 Certifique-se de ter os seguintes softwares instalados:
+
 Java JDK 17 ou superior
+
 Maven 3.x
 
 Uma IDE (IntelliJ IDEA, VS Code, Eclipse, etc.)
