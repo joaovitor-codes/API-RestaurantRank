@@ -27,7 +27,7 @@ public class TagUpdaterObserver implements Observer<RestaurantEntity> {
     @Override
     public void update(RestaurantEntity restaurant) {
         if (strategyName == null || !restaurantTagStrategy.containsKey(this.strategyName)) {
-            this.strategyName = "avarageStrategy";
+            this.strategyName = "averageTagStrategy";
         }
 
         RestaurantTagStrategy strategy = restaurantTagStrategy.get(this.strategyName);

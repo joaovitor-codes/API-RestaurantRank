@@ -68,7 +68,7 @@ public class ReviewService {
         restaurant.getReviews().add(reviewEntity);
         reviewRepository.save(reviewEntity);
 
-        tagUpdaterObserver.setStrategyName("averageStrategy");
+        tagUpdaterObserver.setStrategyName("averageTagStrategy");
         restaurant.registerObserver(tagUpdaterObserver);
         restaurant.notifyObservers();
         restaurant.removeObserver(tagUpdaterObserver);
@@ -100,7 +100,7 @@ public class ReviewService {
             return new PageImpl<>(Collections.emptyList(), pageable, 0);
         }
 
-        Page<ReviewEntity> reviewPage = reviewRepository.findByRestaurantId(restaurantId, pageable);
+        Page<ReviewEntity> reviewPage = reviewRepository.findByRestaurantId_Id(restaurantId, pageable);
         return mapToReviewResponsePage(reviewPage, pageable);
     }
 
@@ -110,7 +110,7 @@ public class ReviewService {
             return new PageImpl<>(Collections.emptyList(), pageable, 0);
         }
 
-        Page<ReviewEntity> reviewPage = reviewRepository.findByUserId(userId, pageable);
+        Page<ReviewEntity> reviewPage = reviewRepository.findByUserId_Id(userId, pageable);
         return mapToReviewResponsePage(reviewPage, pageable);
     }
 
@@ -131,11 +131,11 @@ public class ReviewService {
 
     public void updateReview(Long reviewId, ReviewUpdate reviewUpdate) {
         ReviewEntity review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new IllegalArgumentException("Review não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Review não encontrado"));
 
         reviewUpdate.rating().ifPresent(newRating -> {
-            if (newRating < 1 || newRating > 5) {
-                throw new IllegalArgumentException("a avaliação deve estar entre 1 e 5");
+            if (newRating < 1 || newRating > 11) {
+                throw new ResourceNotFoundException("a avaliação deve estar entre 1 e 10");
             }
             review.setRating(newRating);
         });

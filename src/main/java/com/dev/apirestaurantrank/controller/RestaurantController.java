@@ -19,7 +19,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/page/{page}")
-    public ResponseEntity<Page<RestaurantResponse>> getAllRestaurants(@PathVariable Pageable page) {
+    public ResponseEntity<Page<RestaurantResponse>> getAllRestaurants(@PathVariable int page) {
         return ResponseEntity.ok(restaurantService.getRestaurants(page));
     }
 

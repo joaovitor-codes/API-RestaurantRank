@@ -3,6 +3,7 @@ package com.dev.apirestaurantrank.service;
 import com.dev.apirestaurantrank.dto.RestaurantRequest;
 import com.dev.apirestaurantrank.dto.RestaurantResponse;
 import com.dev.apirestaurantrank.dto.RestaurantUpdate;
+import com.dev.apirestaurantrank.enums.TagEnum;
 import com.dev.apirestaurantrank.exception.ResourceNotFoundException;
 import com.dev.apirestaurantrank.model.RestaurantEntity;
 import com.dev.apirestaurantrank.repository.RestaurantRepository;
@@ -35,7 +36,8 @@ public class RestaurantService {
         return new PageImpl<>(restaurantResponses, pageable, restaurantEntityPage.getTotalElements());
     }
 
-    public Page<RestaurantResponse> getRestaurants(Pageable pageable) {
+    public Page<RestaurantResponse> getRestaurants(int page) {
+        Pageable pageable = Pageable.ofSize(10).withPage(page);
         Page<RestaurantEntity> restaurantEntityPage = restaurantRepository.findAll(pageable);
         return mapToRestaurantResponsePage(restaurantEntityPage, pageable);
     }
@@ -52,14 +54,14 @@ public class RestaurantService {
         );
     }
 
-    public RestaurantResponse createRestaurant(RestaurantRequest restaurantRequest) {
+    public void createRestaurant(RestaurantRequest restaurantRequest) {
         RestaurantEntity restaurantEntity = new RestaurantEntity();
         restaurantEntity.setName(restaurantRequest.name());
         restaurantEntity.setAddress(restaurantRequest.address());
-
+        restaurantEntity.setTag(TagEnum.UNDEFINED);
         RestaurantEntity savedRestaurant = restaurantRepository.save(restaurantEntity);
 
-        return new RestaurantResponse(
+        new RestaurantResponse(
                 savedRestaurant.getId(),
                 savedRestaurant.getName(),
                 savedRestaurant.getAddress(),

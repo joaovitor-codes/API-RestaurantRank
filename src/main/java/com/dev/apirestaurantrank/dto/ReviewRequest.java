@@ -7,10 +7,6 @@ import java.util.Optional;
 
 public record ReviewRequest(
     @NotBlank
-    Long restaurantId,
-    @NotBlank
-    Long userId,
-    @NotBlank
     @Positive
     double rating,
     Optional<String> reviewText
