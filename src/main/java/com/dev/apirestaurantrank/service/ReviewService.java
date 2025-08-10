@@ -94,7 +94,8 @@ public class ReviewService {
         );
     }
 
-    public Page<ReviewResponse> getReviewsByRestaurantId(Long restaurantId, Pageable pageable) {
+    public Page<ReviewResponse> getReviewsByRestaurantId(Long restaurantId, int page) {
+        Pageable pageable = PageRequest.of(page, 10);
         if (restaurantId == null) {
             return new PageImpl<>(Collections.emptyList(), pageable, 0);
         }
@@ -103,7 +104,8 @@ public class ReviewService {
         return mapToReviewResponsePage(reviewPage, pageable);
     }
 
-    public Page<ReviewResponse> getReviewsByUserId(Long userId, Pageable pageable) {
+    public Page<ReviewResponse> getReviewsByUserId(Long userId, int page) {
+        Pageable pageable = PageRequest.of(page, 10);
         if (userId == null) {
             return new PageImpl<>(Collections.emptyList(), pageable, 0);
         }

@@ -21,7 +21,7 @@ public class RestaurantEntity implements Subject<RestaurantEntity> {
     @Enumerated(EnumType.STRING)
     private TagEnum tag;
 
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "restaurantId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewEntity> reviews;
 
     @Transient

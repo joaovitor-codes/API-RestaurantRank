@@ -29,12 +29,12 @@ public class ReviewController {
     }
 
     @GetMapping("/restaurants/{restaurantId}")
-    public ResponseEntity<Page<ReviewResponse>> getReviewsByRestaurantId(@PathVariable Long restaurantId, Pageable page) {
+    public ResponseEntity<Page<ReviewResponse>> getReviewsByRestaurantId(@PathVariable Long restaurantId, int page) {
         return ResponseEntity.ok(reviewService.getReviewsByRestaurantId(restaurantId, page));
     }
 
     @GetMapping("/users/{userId}")
-    public ResponseEntity<Page<ReviewResponse>> getReviewsByUserId(@PathVariable Long userId, Pageable page) {
+    public ResponseEntity<Page<ReviewResponse>> getReviewsByUserId(@PathVariable Long userId, int page) {
         return ResponseEntity.ok(reviewService.getReviewsByUserId(userId, page));
     }
 
