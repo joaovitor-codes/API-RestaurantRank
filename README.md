@@ -69,10 +69,15 @@ Endpoints Principais
 A seguir, estão alguns dos principais endpoints da API, com base nos exemplos discutidos:
 
 Usuários (/users)
+
 GET /users?page=0&size=10: Lista todos os usuários de forma paginada.
+
 GET /users/{id}: Busca um usuário pelo ID.
+
 POST /users: Cria um novo usuário.
+
 PUT /users/{id}: Atualiza um usuário existente (requer o objeto completo).
+
 DELETE /users/{id}: Deleta um usuário.
 
 
