@@ -45,7 +45,7 @@ Uma IDE (IntelliJ IDEA, VS Code, Eclipse, etc.)
 
 Configuração
 Clone o repositório:
-git clone https://github.com/seu-usuario/seu-repositorio.git
+git clone https://github.com/seu-usuario/seu-repositorio.git](https://github.com/joaovitor-codes/API-RestaurantRank.git
 
 cd seu-repositorio
 Configure o banco de dados no arquivo src/main/resources/application.properties. Por padrão, o projeto usa o banco de dados em memória H2. Se desejar usar PostgreSQL, atualize as configurações:
