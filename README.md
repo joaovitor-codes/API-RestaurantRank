@@ -63,4 +63,4 @@ DELETE /users/{id}: Deleta um usuário.
 
 
 NOTA PESSOAL:
-Primeira vez que uso mais de um padrão de Design e também utilizo o Observer, bom aprendizado.
+Primeira vez que uso mais de um padrão de Design e também utilizo o Observer, bom aprendizado. Pretendo melhorar no futuro.
