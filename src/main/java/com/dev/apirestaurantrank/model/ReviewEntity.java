@@ -3,8 +3,6 @@ package com.dev.apirestaurantrank.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
-
 @Entity
 @Data
 public class ReviewEntity {
@@ -16,9 +14,9 @@ public class ReviewEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "authorId", referencedColumnName = "id")
-    private UserEntity userId;
+    private UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurantId", referencedColumnName = "id")
-    private RestaurantEntity restaurantId;
+    private RestaurantEntity restaurant;
 }

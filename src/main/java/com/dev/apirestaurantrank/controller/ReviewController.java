@@ -5,7 +5,6 @@ import com.dev.apirestaurantrank.dto.ReviewResponse;
 import com.dev.apirestaurantrank.dto.ReviewUpdate;
 import com.dev.apirestaurantrank.service.ReviewService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
