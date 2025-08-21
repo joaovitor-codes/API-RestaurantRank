@@ -35,11 +35,9 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
         return userMapper.toUserResponse(userEntity);
     }
+
     public void createUser(UserRequest userRequest) {
-        UserEntity userEntity = new UserEntity();
-        userEntity.setName(userRequest.name());
-        userEntity.setEmail(userRequest.email());
-        userEntity.setPassword(userRequest.password());
+        UserEntity userEntity = userMapper.toUserEntity(userRequest);
         userRepository.save(userEntity);
     }
 

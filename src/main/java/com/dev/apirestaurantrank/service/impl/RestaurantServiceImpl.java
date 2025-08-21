@@ -3,7 +3,6 @@ package com.dev.apirestaurantrank.service.impl;
 import com.dev.apirestaurantrank.dto.RestaurantRequest;
 import com.dev.apirestaurantrank.dto.RestaurantResponse;
 import com.dev.apirestaurantrank.dto.RestaurantUpdate;
-import com.dev.apirestaurantrank.enums.TagEnum;
 import com.dev.apirestaurantrank.exception.ResourceNotFoundException;
 import com.dev.apirestaurantrank.mapper.RestaurantMapper;
 import com.dev.apirestaurantrank.model.RestaurantEntity;
@@ -36,18 +35,8 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     public void createRestaurant(RestaurantRequest restaurantRequest) {
-        RestaurantEntity restaurantEntity = new RestaurantEntity();
-        restaurantEntity.setName(restaurantRequest.name());
-        restaurantEntity.setAddress(restaurantRequest.address());
-        restaurantEntity.setTag(TagEnum.UNDEFINED);
-        RestaurantEntity savedRestaurant = restaurantRepository.save(restaurantEntity);
-
-        new RestaurantResponse(
-                savedRestaurant.getId(),
-                savedRestaurant.getName(),
-                savedRestaurant.getAddress(),
-                savedRestaurant.getTag().name()
-        );
+        RestaurantEntity restaurantEntity = restaurantMapper.toRestaurantEntity(restaurantRequest);
+        restaurantRepository.save(restaurantEntity);
     }
 
     public void updateRestaurant(Long id, RestaurantUpdate restaurantUpdate) {

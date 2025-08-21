@@ -47,15 +47,7 @@ public class ReviewServiceImpl implements ReviewService {
         var author = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
 
-        ReviewEntity reviewEntity = new ReviewEntity();
-        reviewEntity.setRestaurant(restaurant);
-        reviewEntity.setUser(author);
-        reviewEntity.setRating(reviewRequest.rating());
-        if (reviewRequest.reviewText().isPresent()) {
-            reviewRequest.reviewText().ifPresent(reviewEntity::setReviewText);
-        } else {
-            reviewEntity.setReviewText("Sem comentário");
-        }
+        ReviewEntity reviewEntity = reviewMapper.toReviewEntity(reviewRequest, restaurant, author);
         restaurant.getReviews().add(reviewEntity);
         reviewRepository.save(reviewEntity);
 

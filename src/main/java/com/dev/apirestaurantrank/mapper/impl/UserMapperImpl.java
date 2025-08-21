@@ -1,5 +1,6 @@
 package com.dev.apirestaurantrank.mapper.impl;
 
+import com.dev.apirestaurantrank.dto.UserRequest;
 import com.dev.apirestaurantrank.dto.UserResponse;
 import com.dev.apirestaurantrank.mapper.UserMapper;
 import com.dev.apirestaurantrank.model.UserEntity;
@@ -19,6 +20,14 @@ public class UserMapperImpl implements UserMapper {
         return new UserResponse(
                 user.getId(),
                 user.getName());
+    }
+
+    public UserEntity toUserEntity(UserRequest request) {
+        return UserEntity.builder()
+                .name(request.name())
+                .email(request.email())
+                .password(request.password())
+                .build();
     }
 
     public Page<UserResponse> toUserResponsePage(Page<UserEntity> userPage) {
