@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface UserService {
-    Page<UserResponse> mapToUserResponsePage(Page<UserEntity> userEntityPage, Pageable pageable);
     Page<UserResponse> getUsers(int page);
     UserResponse getUserById(Long id);
     void createUser(UserRequest userRequest);

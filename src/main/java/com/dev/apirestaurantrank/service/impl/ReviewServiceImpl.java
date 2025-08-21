@@ -4,6 +4,7 @@ import com.dev.apirestaurantrank.dto.ReviewRequest;
 import com.dev.apirestaurantrank.dto.ReviewResponse;
 import com.dev.apirestaurantrank.dto.ReviewUpdate;
 import com.dev.apirestaurantrank.exception.ResourceNotFoundException;
+import com.dev.apirestaurantrank.mapper.ReviewMapper;
 import com.dev.apirestaurantrank.model.RestaurantEntity;
 import com.dev.apirestaurantrank.model.ReviewEntity;
 import com.dev.apirestaurantrank.observer.TagUpdaterObserver;
@@ -18,8 +19,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
@@ -27,26 +26,18 @@ public class ReviewServiceImpl implements ReviewService {
     private final RestaurantRepository restaurantRepository;
     private final UserRepository userRepository;
     private final TagUpdaterObserver tagUpdaterObserver;
+    private final ReviewMapper reviewMapper;
 
-    public ReviewServiceImpl(ReviewRepository reviewRepository, RestaurantRepository restaurantRepository, UserRepository userRepository, TagUpdaterObserver tagUpdaterObserver) {
+    public ReviewServiceImpl(ReviewRepository reviewRepository,
+                             RestaurantRepository restaurantRepository,
+                             UserRepository userRepository,
+                             TagUpdaterObserver tagUpdaterObserver,
+                             ReviewMapper reviewMapper) {
         this.reviewRepository = reviewRepository;
         this.restaurantRepository = restaurantRepository;
         this.userRepository = userRepository;
         this.tagUpdaterObserver = tagUpdaterObserver;
-    }
-
-    public Page<ReviewResponse> mapToReviewResponsePage(Page<ReviewEntity> reviewPage, Pageable pageable) {
-        List<ReviewResponse> reviewResponses = reviewPage.getContent().stream()
-                .map(review -> new ReviewResponse(
-                        review.getId(),
-                        review.getRestaurant().getId(),
-                        review.getUser().getId(),
-                        review.getRestaurant().getTag().name(),
-                        review.getRating(),
-                        review.getReviewText()))
-                .collect(Collectors.toList());
-
-        return new PageImpl<>(reviewResponses, pageable, reviewPage.getTotalElements());
+        this.reviewMapper = reviewMapper;
     }
 
     public void createReview(ReviewRequest reviewRequest, Long restaurantId, Long userId) {
@@ -77,21 +68,13 @@ public class ReviewServiceImpl implements ReviewService {
     public Page<ReviewResponse> getReviews(int page) {
         Pageable pageable = PageRequest.of(page, 10);
         Page<ReviewEntity> reviewPage = reviewRepository.findAllByOrderByRestaurantId_TagAsc(pageable);
-        return mapToReviewResponsePage(reviewPage, pageable);
+        return reviewMapper.toReviewResponsePage(reviewPage);
     }
 
     public ReviewResponse getReviewById(Long id) {
         ReviewEntity review = reviewRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Review não encontrado"));
-
-        return new ReviewResponse(
-                review.getId(),
-                review.getRestaurant().getId(),
-                review.getUser().getId(),
-                review.getRestaurant().getTag().name(),
-                review.getRating(),
-                review.getReviewText()
-        );
+        return reviewMapper.toReviewResponse(review);
     }
 
     public Page<ReviewResponse> getReviewsByRestaurantId(Long restaurantId, int page) {
@@ -101,7 +84,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         Page<ReviewEntity> reviewPage = reviewRepository.findByRestaurantId_IdOrderByRestaurantId_TagAsc(restaurantId, pageable);
-        return mapToReviewResponsePage(reviewPage, pageable);
+        return reviewMapper.toReviewResponsePage(reviewPage);
     }
 
     public Page<ReviewResponse> getReviewsByUserId(Long userId, int page) {
@@ -111,7 +94,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         Page<ReviewEntity> reviewPage = reviewRepository.findByUserId_IdOrderByRestaurantId_TagAsc(userId, pageable);
-        return mapToReviewResponsePage(reviewPage, pageable);
+        return reviewMapper.toReviewResponsePage(reviewPage);
     }
 
 

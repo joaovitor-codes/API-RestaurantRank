@@ -5,54 +5,34 @@ import com.dev.apirestaurantrank.dto.RestaurantResponse;
 import com.dev.apirestaurantrank.dto.RestaurantUpdate;
 import com.dev.apirestaurantrank.enums.TagEnum;
 import com.dev.apirestaurantrank.exception.ResourceNotFoundException;
+import com.dev.apirestaurantrank.mapper.RestaurantMapper;
 import com.dev.apirestaurantrank.model.RestaurantEntity;
 import com.dev.apirestaurantrank.repository.RestaurantRepository;
 import com.dev.apirestaurantrank.service.RestaurantService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class RestaurantServiceImpl implements RestaurantService {
     private final RestaurantRepository restaurantRepository;
+    private final RestaurantMapper restaurantMapper;
 
-    public RestaurantServiceImpl(RestaurantRepository restaurantRepository) {
+    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, RestaurantMapper restaurantMapper) {
         this.restaurantRepository = restaurantRepository;
-    }
-
-    public Page<RestaurantResponse> mapToRestaurantResponsePage(Page<RestaurantEntity> restaurantEntityPage, Pageable pageable) {
-        List<RestaurantResponse> restaurantResponses = restaurantEntityPage.getContent().stream()
-                .map(restaurant -> new RestaurantResponse(
-                        restaurant.getId(),
-                        restaurant.getName(),
-                        restaurant.getAddress(),
-                        restaurant.getTag().name()
-                ))
-                .collect(Collectors.toList());
-
-        return new PageImpl<>(restaurantResponses, pageable, restaurantEntityPage.getTotalElements());
+        this.restaurantMapper = restaurantMapper;
     }
 
     public Page<RestaurantResponse> getRestaurants(int page) {
         Pageable pageable = Pageable.ofSize(10).withPage(page);
         Page<RestaurantEntity> restaurantEntityPage = restaurantRepository.findAll(pageable);
-        return mapToRestaurantResponsePage(restaurantEntityPage, pageable);
+        return restaurantMapper.toRestaurantResponsePage(restaurantEntityPage);
     }
 
     public RestaurantResponse getRestaurantById(Long id) {
         RestaurantEntity restaurant = restaurantRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Restaurante não encontrado"));
-
-        return new RestaurantResponse(
-                restaurant.getId(),
-                restaurant.getName(),
-                restaurant.getAddress(),
-                restaurant.getTag().name()
-        );
+        return restaurantMapper.toRestaurantResponse(restaurant);
     }
 
     public void createRestaurant(RestaurantRequest restaurantRequest) {
