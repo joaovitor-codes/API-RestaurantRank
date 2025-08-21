@@ -1,6 +1,6 @@
 # API-RestaurantRank
 
-Aluno: João Vitot da Silva, Dalton Eduardo, Marcos Vinicius e Pedro Guilherme.
+Aluno: João Vitor da Silva, Dalton Eduardo, Marcos Vinicius e Pedro Guilherme.
 
 Sobre o Projeto:
 Esta é uma API RESTful desenvolvida com Spring Boot, projetada para gerenciar um sistema de rank de restaurantes. A aplicação permite que usuários criem contas, adicionem restaurantes, e postem reviews e avaliações. O projeto inclui funcionalidades de CRUD, paginação e uma arquitetura orientada a eventos usando o padrão Observer para atualizações em tempo real.
