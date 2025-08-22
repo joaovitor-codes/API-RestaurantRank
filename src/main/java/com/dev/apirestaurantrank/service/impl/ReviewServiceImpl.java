@@ -7,10 +7,10 @@ import com.dev.apirestaurantrank.exception.ResourceNotFoundException;
 import com.dev.apirestaurantrank.mapper.ReviewMapper;
 import com.dev.apirestaurantrank.model.RestaurantEntity;
 import com.dev.apirestaurantrank.model.ReviewEntity;
-import com.dev.apirestaurantrank.observer.TagUpdaterObserver;
 import com.dev.apirestaurantrank.repository.RestaurantRepository;
 import com.dev.apirestaurantrank.repository.ReviewRepository;
 import com.dev.apirestaurantrank.repository.UserRepository;
+import com.dev.apirestaurantrank.service.NotifyRestaurantService;
 import com.dev.apirestaurantrank.service.ReviewService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -25,21 +25,22 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final RestaurantRepository restaurantRepository;
     private final UserRepository userRepository;
-    private final TagUpdaterObserver tagUpdaterObserver;
+    private final NotifyRestaurantService notifyRestaurantService;
     private final ReviewMapper reviewMapper;
 
     public ReviewServiceImpl(ReviewRepository reviewRepository,
                              RestaurantRepository restaurantRepository,
                              UserRepository userRepository,
-                             TagUpdaterObserver tagUpdaterObserver,
+                             NotifyRestaurantService notifyRestaurantService,
                              ReviewMapper reviewMapper) {
         this.reviewRepository = reviewRepository;
         this.restaurantRepository = restaurantRepository;
         this.userRepository = userRepository;
-        this.tagUpdaterObserver = tagUpdaterObserver;
+        this.notifyRestaurantService = notifyRestaurantService;
         this.reviewMapper = reviewMapper;
     }
 
+    @Override
     public void createReview(ReviewRequest reviewRequest, Long restaurantId, Long userId) {
         var restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new ResourceNotFoundException("Restaurant não encontrado"));
@@ -50,25 +51,24 @@ public class ReviewServiceImpl implements ReviewService {
         ReviewEntity reviewEntity = reviewMapper.toReviewEntity(reviewRequest, restaurant, author);
         restaurant.getReviews().add(reviewEntity);
         reviewRepository.save(reviewEntity);
-
-        tagUpdaterObserver.setStrategyName("averageTagStrategy");
-        restaurant.registerObserver(tagUpdaterObserver);
-        restaurant.notifyObservers();
-        restaurant.removeObserver(tagUpdaterObserver);
+        notifyRestaurantService.notifyObservers(restaurant, "averageTagStrategy");
     }
 
+    @Override
     public Page<ReviewResponse> getReviews(int page) {
         Pageable pageable = PageRequest.of(page, 10);
         Page<ReviewEntity> reviewPage = reviewRepository.findAllByOrderByRestaurantId_TagAsc(pageable);
         return reviewMapper.toReviewResponsePage(reviewPage);
     }
 
+    @Override
     public ReviewResponse getReviewById(Long id) {
         ReviewEntity review = reviewRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Review não encontrado"));
         return reviewMapper.toReviewResponse(review);
     }
 
+    @Override
     public Page<ReviewResponse> getReviewsByRestaurantId(Long restaurantId, int page) {
         Pageable pageable = PageRequest.of(page, 10);
         if (restaurantId == null) {
@@ -79,6 +79,7 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewMapper.toReviewResponsePage(reviewPage);
     }
 
+    @Override
     public Page<ReviewResponse> getReviewsByUserId(Long userId, int page) {
         Pageable pageable = PageRequest.of(page, 10);
         if (userId == null) {
@@ -90,6 +91,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
 
+    @Override
     public void deleteReview(Long reviewId) {
         ReviewEntity review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ResourceNotFoundException("Review não encontrado"));
@@ -97,13 +99,10 @@ public class ReviewServiceImpl implements ReviewService {
         RestaurantEntity restaurant = review.getRestaurant();
         restaurant.getReviews().remove(review);
         reviewRepository.delete(review);
-
-        tagUpdaterObserver.setStrategyName("averageStrategy");
-        restaurant.registerObserver(tagUpdaterObserver);
-        restaurant.notifyObservers();
-        restaurant.removeObserver(tagUpdaterObserver);
+        notifyRestaurantService.notifyObservers(restaurant, "averageTagStrategy");
     }
 
+    @Override
     public void updateReview(Long reviewId, ReviewUpdate reviewUpdate) {
         ReviewEntity review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ResourceNotFoundException("Review não encontrado"));
@@ -116,12 +115,8 @@ public class ReviewServiceImpl implements ReviewService {
         });
         reviewUpdate.reviewText().ifPresent(review::setReviewText);
         reviewRepository.save(review);
-
         RestaurantEntity restaurant = review.getRestaurant();
-        tagUpdaterObserver.setStrategyName("averageStrategy");
-        restaurant.registerObserver(tagUpdaterObserver);
-        restaurant.notifyObservers();
-        restaurant.removeObserver(tagUpdaterObserver);
+        notifyRestaurantService.notifyObservers(restaurant, "averageTagStrategy");
     }
 
 }

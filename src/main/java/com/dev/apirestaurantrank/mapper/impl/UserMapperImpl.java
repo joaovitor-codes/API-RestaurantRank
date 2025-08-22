@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class UserMapperImpl implements UserMapper {
+    @Override
     public UserResponse toUserResponse(UserEntity user) {
         if (user == null) {
             return null;
@@ -22,6 +23,7 @@ public class UserMapperImpl implements UserMapper {
                 user.getName());
     }
 
+    @Override
     public UserEntity toUserEntity(UserRequest request) {
         return UserEntity.builder()
                 .name(request.name())
@@ -30,6 +32,7 @@ public class UserMapperImpl implements UserMapper {
                 .build();
     }
 
+    @Override
     public Page<UserResponse> toUserResponsePage(Page<UserEntity> userPage) {
         if (userPage == null) {
             return Page.empty();

@@ -22,23 +22,27 @@ public class RestaurantServiceImpl implements RestaurantService {
         this.restaurantMapper = restaurantMapper;
     }
 
+    @Override
     public Page<RestaurantResponse> getRestaurants(int page) {
         Pageable pageable = Pageable.ofSize(10).withPage(page);
         Page<RestaurantEntity> restaurantEntityPage = restaurantRepository.findAll(pageable);
         return restaurantMapper.toRestaurantResponsePage(restaurantEntityPage);
     }
 
+    @Override
     public RestaurantResponse getRestaurantById(Long id) {
         RestaurantEntity restaurant = restaurantRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Restaurante não encontrado"));
         return restaurantMapper.toRestaurantResponse(restaurant);
     }
 
+    @Override
     public void createRestaurant(RestaurantRequest restaurantRequest) {
         RestaurantEntity restaurantEntity = restaurantMapper.toRestaurantEntity(restaurantRequest);
         restaurantRepository.save(restaurantEntity);
     }
 
+    @Override
     public void updateRestaurant(Long id, RestaurantUpdate restaurantUpdate) {
         RestaurantEntity restaurant = restaurantRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Restaurante não encontrado"));
@@ -49,6 +53,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurantRepository.save(restaurant);
     }
 
+    @Override
     public void deleteRestaurant(Long id) {
         RestaurantEntity restaurant = restaurantRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Restaurante não encontrado"));

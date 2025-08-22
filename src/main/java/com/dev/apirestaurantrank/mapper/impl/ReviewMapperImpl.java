@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class ReviewMapperImpl implements ReviewMapper {
+    @Override
     public ReviewResponse toReviewResponse(ReviewEntity review) {
         if (review == null) {
             return null;
@@ -29,6 +30,7 @@ public class ReviewMapperImpl implements ReviewMapper {
                 review.getReviewText());
     }
 
+    @Override
     public ReviewEntity toReviewEntity(ReviewRequest request, RestaurantEntity restaurant, UserEntity author) {
         return ReviewEntity.builder()
                 .rating(request.rating())
@@ -38,6 +40,7 @@ public class ReviewMapperImpl implements ReviewMapper {
                 .build();
     }
 
+    @Override
     public Page<ReviewResponse> toReviewResponsePage(Page<ReviewEntity> reviewPage) {
         if (reviewPage == null) {
             return Page.empty();

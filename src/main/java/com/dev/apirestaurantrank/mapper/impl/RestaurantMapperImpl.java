@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class RestaurantMapperImpl implements RestaurantMapper {
+    @Override
     public RestaurantResponse toRestaurantResponse(RestaurantEntity restaurant) {
         if (restaurant == null) {
             return null;
@@ -27,6 +28,7 @@ public class RestaurantMapperImpl implements RestaurantMapper {
                 restaurant.getAddress());
     }
 
+    @Override
     public RestaurantEntity toRestaurantEntity(RestaurantRequest request) {
         return RestaurantEntity.builder()
                 .tag(TagEnum.UNDEFINED)
@@ -35,6 +37,7 @@ public class RestaurantMapperImpl implements RestaurantMapper {
                 .build();
     }
 
+    @Override
     public Page<RestaurantResponse> toRestaurantResponsePage(Page<RestaurantEntity> restaurants) {
         if (restaurants == null) {
             return null;

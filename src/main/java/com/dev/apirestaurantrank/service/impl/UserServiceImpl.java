@@ -24,29 +24,34 @@ public class UserServiceImpl implements UserService {
         this.userMapper = userMapper;
     }
 
+    @Override
     public Page<UserResponse> getUsers(int page) {
         Pageable pageable = PageRequest.of(page, 10);
         Page<UserEntity> userEntityPage = userRepository.findAll(pageable);
         return userMapper.toUserResponsePage(userEntityPage);
     }
 
+    @Override
     public UserResponse getUserById(Long id) {
         UserEntity userEntity = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
         return userMapper.toUserResponse(userEntity);
     }
 
+    @Override
     public void createUser(UserRequest userRequest) {
         UserEntity userEntity = userMapper.toUserEntity(userRequest);
         userRepository.save(userEntity);
     }
 
+    @Override
     public void deleteUser(Long id) {
         UserEntity userEntity = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
         userRepository.delete(userEntity);
     }
 
+    @Override
     public void updateUser(Long id, UserUpdate userUpdate) {
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
