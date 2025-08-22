@@ -1,88 +1,70 @@
-# API-RestaurantRank
+# 🍔 API Restaurant Rank
 
-Aluno: João Vitor da Silva, Dalton Eduardo, Marcos Vinicius e Pedro Guilherme.
+API RESTful para classificar e rankear restaurantes com base em avaliações de usuários. O projeto foi desenvolvido com foco em boas práticas de engenharia de software, utilizando padrões de design e arquitetura modular para garantir um código limpo.
 
-Sobre o Projeto:
-Esta é uma API RESTful desenvolvida com Spring Boot, projetada para gerenciar um sistema de rank de restaurantes. A aplicação permite que usuários criem contas, adicionem restaurantes, e postem reviews e avaliações. O projeto inclui funcionalidades de CRUD, paginação e uma arquitetura orientada a eventos usando o padrão Observer para atualizações em tempo real.
+---
 
-Funcionalidades Principais:
-Gerenciamento de Usuários: Endpoints completos para criar, ler, atualizar e deletar (CRUD) usuários.
+### 💻 Tecnologias Utilizadas
 
-Gerenciamento de Restaurantes: Endpoints para gerenciar restaurantes, incluindo a listagem por paginação.
+* **Java 17**: Linguagem de programação principal.
+* **Spring Boot**: Framework para o desenvolvimento rápido da API.
+* **Spring Data JPA**: Para a persistência de dados e interação com o banco de dados.
+* **Banco de Dados**: H2 apenas para testes.
+* **Maven**: Gerenciador de dependências.
 
-Reviews e Avaliações: Funcionalidade para usuários darem notas e escreverem reviews para restaurantes.
+---
 
-Padrão Observer: Um sistema para notificar entidades (como talvez a média de um restaurante) quando novas reviews são adicionadas.
+### 🚀 Arquitetura e Padrões de Design
 
-Paginação: Listagem de recursos com suporte a paginação para otimizar o desempenho.
+A arquitetura do projeto foi desenhada para seguir os princípios **SOLID**, com destaque para:
 
-Validação de Dados: Uso de anotações como @Valid, @NotBlank e @Email para garantir a integridade dos dados.
+* **Princípio da Responsabilidade Única (SRP)**: Cada classe tem uma única e bem definida responsabilidade. Por exemplo, a classe `ReviewServiceImpl` é responsável apenas por gerenciar as avaliações (CRUD), enquanto o `NotifyRestaurantService` é responsável por orquestrar a notificação do padrão `Observer`.
+* **Princípio Aberto/Fechado (OCP)**: O sistema é aberto para extensão e fechado para modificação. Novas estratégias de cálculo de tags podem ser adicionadas criando-se novas classes que implementam a interface `RestaurantTagStrategy`, sem a necessidade de alterar o código existente.
 
-Tecnologias Utilizadas:
+Os seguintes padrões de design foram aplicados:
 
-Linguagem: Java 17
+* **Padrão Observer**: Usado para atualizar automaticamente a tag (rank) de um restaurante sempre que uma nova avaliação é criada, excluída ou atualizada. O `RestaurantEntity` atua como o **Subject**, e o `TagUpdaterObserver` como o **Observer**.
+* **Padrão Strategy**: Utilizado para encapsular a lógica de cálculo da tag do restaurante. A interface `RestaurantTagStrategy` permite que o sistema utilize diferentes algoritmos de cálculo de forma dinâmica, como a `AverageTagStrategy` (cálculo por média simples).
+---
 
-Framework: Spring Boot 3.x
+### 📋 Funcionalidades da API
 
-Persistência: Spring Data JPA
+A API oferece os seguintes endpoints para gerenciamento de usuários, restaurantes e avaliações:
 
-Banco de Dados: H2 (para ambiente de desenvolvimento) e PostgreSQL (recomendado para produção)
+#### **Gerenciamento de Usuários**
 
-Build Tool: Maven
+* `POST /users`: Cria um novo usuário.
+* `GET /users/page/{page}`: Retorna uma lista paginada de todos os usuários.
+* `GET /users/{id}`: Retorna um usuário específico pelo ID.
+* `PUT /users/{id}`: Atualiza um usuário existente (completo).
+* `PATCH /users/{id}`: Atualiza parcialmente um usuário.
+* `DELETE /users/{id}`: Exclui um usuário.
 
-Documentação: Springdoc-OpenAPI (Swagger UI)
+#### **Gerenciamento de Restaurantes**
 
-Outros: Lombok para reduzir código boilerplate
+* `GET /restaurants`: Lista todos os restaurantes.
+* `POST /restaurants`: Cria um novo restaurante.
+* `GET /restaurants/{id}`: Busca um restaurante por ID.
+* `PUT /restaurants/{id}`: Atualiza um restaurante.
+* `DELETE /restaurants/{id}`: Exclui um restaurante.
 
-Como Rodar o Projeto:
-Siga estes passos para configurar e rodar a aplicação em sua máquina local.
+#### **Gerenciamento de Avaliações (Reviews)**
 
-Pré-requisitos:
-Certifique-se de ter os seguintes softwares instalados:
+* `POST /reviews`: Cria uma nova avaliação para um restaurante.
+* `GET /reviews`: Lista todas as avaliações.
+* `GET /reviews/{id}`: Busca uma avaliação por ID.
+* `GET /reviews/restaurant/{id}`: Busca avaliações de um restaurante específico.
+* `PUT /reviews/{id}`: Atualiza uma avaliação.
+* `DELETE /reviews/{id}`: Exclui uma avaliação.
 
-Java JDK 17 ou superior
+---
 
-Maven 3.x
+### ⚙️ Instalação e Execução
 
-Uma IDE (IntelliJ IDEA, VS Code, Eclipse, etc.)
+1.  **Clone o repositório:**
+    ```bash
+    git clone https://github.com/joaovitor-codes/API-RestaurantRank.git
+    cd API-RestaurantRank
+    ```
 
-Configuração
-Clone o repositório:
-git clone https://github.com/seu-usuario/seu-repositorio.git](https://github.com/joaovitor-codes/API-RestaurantRank.git
-
-cd seu-repositorio
-Configure o banco de dados no arquivo src/main/resources/application.properties. Por padrão, o projeto usa o banco de dados em memória H2. Se desejar usar PostgreSQL, atualize as configurações:
-
-spring.datasource.url=jdbc:postgresql://localhost:5432/nomedobanco
-spring.datasource.username=seu_usuario
-spring.datasource.password=sua_senha
-spring.jpa.hibernate.ddl-auto=update
-
-Execute a aplicação usando Maven:
-mvn spring-boot:run
-
-A API estará disponível em http://localhost:8080.
-
-Documentação da API (Swagger)
-Após iniciar a aplicação, você pode acessar a documentação completa da API através do Swagger UI no seu navegador:
-
-http://localhost:8080/swagger-ui.html
-
-Endpoints Principais
-A seguir, estão alguns dos principais endpoints da API, com base nos exemplos discutidos:
-
-Usuários (/users)
-
-GET /users?page=0&size=10: Lista todos os usuários de forma paginada.
-
-GET /users/{id}: Busca um usuário pelo ID.
-
-POST /users: Cria um novo usuário.
-
-PUT /users/{id}: Atualiza um usuário existente (requer o objeto completo).
-
-DELETE /users/{id}: Deleta um usuário.
-
-
-NOTA PESSOAL:
-Primeira vez que uso mais de um padrão de Design e também utilizo o Observer, bom aprendizado. Pretendo melhorar no futuro.
+A aplicação será iniciada em `http://localhost:8080`.
